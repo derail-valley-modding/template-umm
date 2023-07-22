@@ -1,0 +1,8 @@
+{
+  "Id": "MOD_NAME",
+  "Version": "0.1.0",
+  "DisplayName": "MOD_NAME",
+  "Author": "Your Name",
+  "EntryMethod": "MOD_NAME.Main.Load",
+  "ManagerVersion": "0.27.3"
+}
