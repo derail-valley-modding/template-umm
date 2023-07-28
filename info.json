@@ -4,5 +4,6 @@
   "DisplayName": "MOD_NAME",
   "Author": "MOD_AUTHOR",
   "EntryMethod": "MOD_NAME.Main.Load",
-  "ManagerVersion": "0.27.3"
+  "ManagerVersion": "0.27.3",
+	"Repository": "https://github.com/OWNER/REPOSITORY/blob/main/repository.json"
 }
