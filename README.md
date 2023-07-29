@@ -9,15 +9,15 @@
 
 <!-- PROJECT TITLE -->
 <div align="center">
-  <h1>Unity Mod Manager Mod Template</h1>
-  <p>
-	A template for creating <a href="http://www.derailvalley.com/">Derail Valley</a> mods that load via <a href="https://www.nexusmods.com/site/mods/21">Unity Mod Manager</a>.
-	<br />
-	<br />
-	<a href="https://github.com/derail-valley-modding/template-umm/issues">Report Bug</a>
-	·
-	<a href="https://github.com/derail-valley-modding/template-umm/issues">Request Feature</a>
-  </p>
+	<h1>Unity Mod Manager Mod Template</h1>
+	<p>
+		A template for creating <a href="http://www.derailvalley.com/">Derail Valley</a> mods that load via <a href="https://www.nexusmods.com/site/mods/21">Unity Mod Manager</a>.
+		<br />
+		<br />
+		<a href="https://github.com/derail-valley-modding/template-umm/issues">Report Bug</a>
+		·
+		<a href="https://github.com/derail-valley-modding/template-umm/issues">Request Feature</a>
+	</p>
 </div>
 
 
@@ -25,13 +25,13 @@
 
 <!-- TABLE OF CONTENTS -->
 <details>
-  <summary>Table of Contents</summary>
-  <ol>
-	<li><a href="#about-the-project">About The Project</a></li>
-	<li><a href="#building">Building</a></li>
-	<li><a href="#packaging">Packaging</a></li>
-	<li><a href="#license">License</a></li>
-  </ol>
+	<summary>Table of Contents</summary>
+	<ol>
+		<li><a href="#about-the-project">About The Project</a></li>
+		<li><a href="#building">Building</a></li>
+		<li><a href="#packaging">Packaging</a></li>
+		<li><a href="#license">License</a></li>
+	</ol>
 </details>
 
 

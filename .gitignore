@@ -1,6 +1,9 @@
 # Local reference configuration
 Directory.Build.targets
 
+# Local preferences
+.vscode/
+
 # Packaging directories
 [Bb]uild/
 [Dd]ist/
