@@ -21,7 +21,7 @@ public static class Main
 		catch (Exception ex)
 		{
 			modEntry.Logger.LogException($"Failed to load {modEntry.Info.DisplayName}:", ex);
-			harmony?.UnpatchAll();
+			harmony?.UnpatchAll(modEntry.Info.Id);
 			return false;
 		}
 
