@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using HarmonyLib;
 using UnityModManagerNet;
 
@@ -14,7 +15,7 @@ public static class Main
 		try
 		{
 			harmony = new Harmony(modEntry.Info.Id);
-			harmony.PatchAll();
+			harmony.PatchAll(Assembly.GetExecutingAssembly());
 
 			// Other plugin startup logic
 		}
