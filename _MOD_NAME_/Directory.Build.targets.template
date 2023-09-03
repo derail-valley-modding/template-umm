@@ -1,0 +1,31 @@
+<!--
+How to use this template, in order:
+1. Change the file name to 'Directory.Build.targets'
+2. You must fill in DerailValleyPath with the correct absolute or relative path to Derailvalley installation directory.
+3. You must fill in CodeRepositoryUrl with the correct URL to the code repository for auto-updates to work
+4. (Optional) If you don't want your mod to have settings, change UserSettings below to `no`
+5. (Optional) Edit the BuildArchiveName below if you prefer a different name for the release archive.
+-->
+
+<Project>
+    <!-- Properties you must change to work for you-->
+    <PropertyGroup>
+        <DerailValleyPath></DerailValleyPath>
+        <!--
+        The URL to the repository with the Mod's code. This template assumes github but can be anywhere publicly accessible.
+        Must not end with a slash.
+        Note: If you don't use github, see also `building/Repository.json.props` to make sure the path matches.
+        -->
+        <CodeRepositoryUrl>https://github.com/OWNER/REPOSITORY</CodeRepositoryUrl>
+        <!-- Do you want to activate mod settings? -->
+        <UserSettings>yes</UserSettings>
+    </PropertyGroup>
+    <!-- / Properties you must change to work for you-->
+
+    <Target Name="delayedProperty" BeforeTargets="BeforeBuild">
+        <PropertyGroup>
+            <!-- ModId and ModVersion are read from info.json (see building/readInfoJson.props) -->
+            <BuildArchiveName>$(ModId)_v$(ModVersion)</BuildArchiveName>
+        </PropertyGroup>
+    </Target>
+</Project>

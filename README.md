@@ -45,7 +45,11 @@ This is a template for Derail Valley mods that load via the Unity Mod Manager mo
 TODO: Instructions for how mod creators use this template.
 
 
+## Adapting to your build
 
+Edit the name of these files/directories:
+
+1. 
 
 <!-- BUILDING -->
 

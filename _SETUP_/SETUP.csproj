@@ -1,0 +1,33 @@
+<Project DefaultTargets="SETUP_ENV" Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ModName>$(MOD_NAME)</ModName>
+    <ModAuthor>$(MOD_AUTHOR)</ModAuthor>
+  </PropertyGroup>
+
+  <Target Name="CheckEnvVar" BeforeTargets="SETUP_ENV">
+    <Message Text="MOD_NAME: $(ModName)" Importance="High"/>
+    <Message Text="MOD_AUTHOR: $(ModAuthor)" Importance="High"/>
+    <Error Condition="'$(ModName)' == ''"   Text="MOD_NAME property not provided. If you don't know how, read README how to set it. Aborting build." />
+    <Error Condition="'$(ModAuthor)' == ''" Text="MOD_AUTHOR property not provided. If you don't know how, read README how to set it. Aborting build." />
+  </Target>
+
+  <Target Name="SETUP_ENV">
+    <CallTarget Targets="
+      FindAndReplaceMOD_NAME;
+      FindAndReplaceMOD_AUTHOR;
+      Rename
+    " />
+    <Message Condition="Exists('../$(ModName)') AND Exists('../$(ModName).sln') " Text="Setup complete. You may now delete the '$(MSBuildProjectDirectory)' directory" Importance="High"/>
+    <Message Condition="!Exists('../$(ModName)') OR !Exists('../$(ModName).sln') " Text="Something went wrong with the setup process. Check if there's some error message before this" Importance="High"/>
+  </Target>
+
+
+	<Import Project="FindAndReplace.props" />
+</Project>

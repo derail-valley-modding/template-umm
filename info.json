@@ -1,9 +1,10 @@
 {
-	"Id": "MOD_NAME",
+	"Id": "_MOD_NAME_",
 	"Version": "1.0.0",
-	"DisplayName": "MOD_NAME",
-	"Author": "MOD_AUTHOR",
-	"EntryMethod": "MOD_NAME.Main.Load",
+	"DisplayName": "_MOD_NAME_",
+	"Author": "_MOD_AUTHOR_",
+	"EntryMethod": "_MOD_NAME_.Main.Load",
 	"ManagerVersion": "0.27.3",
-	"Repository": "https://raw.githubusercontent.com/OWNER/REPOSITORY/blob/main/repository.json"
+	"Repository": "https://raw.githubusercontent.com/OWNER/REPOSITORY/blob/main/repository.json",
+	"HomePage": "https://www.nexusmods.com/derailvalley/mods/MOD_ID"
 }

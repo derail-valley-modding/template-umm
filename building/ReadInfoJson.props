@@ -1,0 +1,29 @@
+<Project InitialTargets="ReadJsonFile">
+	<UsingTask TaskName="ReadJsonFile" TaskFactory="RoslynCodeTaskFactory"
+		AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+		<ParameterGroup>
+			<JsonFilePath ParameterType="System.String" Required="true" />
+			<Id ParameterType="System.String" Output="true" />
+			<Version ParameterType="System.String" Output="true" />
+		</ParameterGroup>
+		<Task>
+			<Reference Include="Newtonsoft.Json.dll" />
+			<Using Namespace="Newtonsoft.Json" />
+			<Using Namespace="System.IO" />
+			<Code Type="Fragment" Language="cs">
+			<![CDATA[
+				var json = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(JsonFilePath));
+				Id = json["Id"];
+				Version = json["Version"];
+			]]>
+			</Code>
+		</Task>
+	</UsingTask>
+
+	<Target Name="ReadJsonFile">
+		<ReadJsonFile JsonFilePath="../info.json">
+			<Output TaskParameter="Id" PropertyName="ModId" />
+			<Output TaskParameter="Version" PropertyName="ModVersion" />
+		</ReadJsonFile>
+	</Target>
+</Project>
