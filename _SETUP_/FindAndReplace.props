@@ -45,7 +45,7 @@
 	<Target Name="FindAndReplaceMOD_NAME" >
 		<FindAndReplace
 			At=".."
-			Files="_MOD_NAME_.sln;info.json;repository.json;_MOD_NAME_/Main.cs"
+			Files="_MOD_NAME_.sln;info.json;repository.json;_MOD_NAME_/Main.cs;_MOD_NAME_/Settings.cs"
 			Find="_MOD_NAME_"
 			Replace="$(ModName)"
 		/>

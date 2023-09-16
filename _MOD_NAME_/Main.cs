@@ -18,6 +18,10 @@ namespace _MOD_NAME_;
         public static UnityModManager.ModEntry mod;
         private static Harmony harmony;
 
+    #if SETTINGS_ON
+        public static Settings settings;
+    #endif
+
         public static bool Load(UnityModManager.ModEntry modEntry)
         {
             try
@@ -29,6 +33,11 @@ namespace _MOD_NAME_;
                 modEntry.OnToggle = OnToggle;
     #if DEBUG
                 modEntry.OnUnload = Unload;
+    #endif
+    #if SETTINGS_ON
+            settings = Settings.Load<Settings>(modEntry);
+            modEntry.OnGUI = OnGUI;
+            modEntry.OnSaveGUI = OnSaveGUI;
     #endif
 
                 // Other plugin startup logic
@@ -57,6 +66,18 @@ namespace _MOD_NAME_;
             harmony.UnpatchAll();
 
             return true;
+        }
+    #endif
+
+    #if SETTINGS_ON
+        static void OnGUI(UnityModManager.ModEntry modEntry)
+        {
+            settings.Draw(modEntry);
+        }
+
+        static void OnSaveGUI(UnityModManager.ModEntry modEntry)
+        {
+            settings.Save(modEntry);
         }
     #endif
     }
