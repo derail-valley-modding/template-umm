@@ -124,6 +124,6 @@ See [LICENSE][license-url] for more information.
 [issues-shield]: https://img.shields.io/github/issues/derail-valley-modding/template-umm.svg?style=for-the-badge
 [issues-url]: https://github.com/derail-valley-modding/template-umm/issues
 [license-shield]: https://img.shields.io/github/license/derail-valley-modding/template-umm.svg?style=for-the-badge
-[license-url]: https://github.com/derail-valley-modding/template-umm/blob/master/LICENSE
+[license-url]: https://github.com/derail-valley-modding/template-umm/blob/main/LICENSE
 [references-url]: https://learn.microsoft.com/en-us/visualstudio/msbuild/customize-your-build?view=vs-2022
 [autocrlf-url]: https://www.git-scm.com/book/en/v2/Customizing-Git-Git-Configuration#_formatting_and_whitespace
