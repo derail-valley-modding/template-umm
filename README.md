@@ -42,32 +42,95 @@
 ## About The Project
 
 This is a template for Derail Valley mods that load via the Unity Mod Manager mod loader.  
-TODO: Instructions for how mod creators use this template.
+
+## Initial setup
 
 
+### Get all files and names in place
+
+Using a shell of your choice (E.g. powershell), open a session (E.g. powershell window) at the `_SETUP_` directory.
+
+Ensure `dotnet` is installed. Just type `dotnet` in your shell to test that. If it isn't, then you need to install that first.
+
+Execute a `dotnet` command as follows to setup the project for you:
+
+```
+dotnet build -c SETUP_ENV -p MOD_NAME=ModNameOfYourChoice -p MOD_AUTHOR=TheNameYouAreKnownFor
+```
+E.g.
+```
+dotnet build -c SETUP_ENV -p MOD_NAME=UmmmmExample -p MOD_AUTHOR=fauxnik
+```
+
+If that execution is a success, feel free to delete the `_SETUP_` directory, the initial setup is done.
+
+### Finished last touches
+
+#### Edit `info.json`,
+
+Fill in the `Repository` field and either fill in or delete the `Homepage` field.
+
+The `Repository` field is what allows automatic updates to work correctly.
+
+#### Make own build configuration using `Directory.Build.targets`
+
+Move `Directory.Build.targets.template` inside your project dirctory to [`Directory.Build.targets`][references-url].
+
+Edit [`Directory.Build.targets`][references-url] according to the instructions at the top.
+
+
+When editing `DerailValleyPath` in your [`Directory.Build.targets`][references-url] file, you will need to replace the reference path with the corresponding folder/directory on your system. Also note that any shortcuts you might use in file explorer—such as %ProgramFiles%—won't be expanded in these paths. If you know what they are, you can use symlinks or junctions if you prefer to use relative paths, otherwise, use absolute paths.  
+Here's two examples of valid absolute paths for `DerailValleyPath` including the XML tags.
+
+Windows: `<DerailValleyPath>C:\Program Files (x86)\Steam\steamapps\common\Derail Valley</DerailValleyPath>`
+
+Linux: `<DerailValleyPath>/home/username/.steam/steamapps/common/Derail Valley</DerailValleyPath>`
+
+You also must set your `CodeRepositoryUrl` to the URL of the repository you are using. A format to match github's is already provided for you where you only need to replace `OWNER` and `REPOSITORY`.
+
+If you are not using github you might need to change `DownloadUrl` in the file `building/Repository.json.props`
+
+For more details, see: https://wiki.nexusmods.com/index.php/How_to_make_updates_(UMM)
 
 
 <!-- BUILDING -->
 
 ## Building
 
-Building the project requires some initial setup, after which running `dotnet build` will do a Debug build or running `dotnet build -c Release` will do a Release build.
 
-### References Setup
+### So, how to build?
 
-After cloning the repository, some setup is required in order to successfully build the mod DLLs. You will need to create a new [Directory.Build.targets][references-url] file to specify your local reference paths. This file will be located in the main directory, next to MOD_NAME.sln.
+Building the project is done by running `dotnet build` and specifying the build configuration you want. Here's 2 examples:
 
-Below is an example of the necessary structure. When creating your targets file, you will need to replace the reference paths with the corresponding folders on your system. Make sure to include semicolons **between** each of the paths and no semicolon after the last path. Also note that any shortcuts you might use in file explorer—such as %ProgramFiles%—won't be expanded in these paths. You have to use full, absolute paths.
-```xml
-<Project>
-	<PropertyGroup>
-		<ReferencePath>
-			C:\Program Files (x86)\Steam\steamapps\common\Derail Valley\DerailValley_Data\Managed\
-		</ReferencePath>
-		<AssemblySearchPaths>$(AssemblySearchPaths);$(ReferencePath);</AssemblySearchPaths>
-	</PropertyGroup>
-</Project>
-```
+- `dotnet build -c Debug` will do a Debug build.
+- `dotnet build -c Release` will do a Release build.
+
+
+### Build configurations?
+
+There are many configurations at your disposal to do a build. A few are expected to be used much more commonly than others.
+The most common should be:
+
+- `Reload`
+- `DebugInstall`
+- `ReleaseInstall`
+
+There's also:
+- `Debug`
+- `Release`
+
+
+The first 3, are configurations which copy the new version to your mods directory in Derail Valley making it ready to use.
+
+`Debug` and `Release` and `ReleaseInstall` also produce an output archive which you can use to release a new version or to send to someone with debug activated.
+
+`DebugInstall` is meant for the first time you make a build or if you want to make a build and restart Derail Valley.
+
+### What is `Reload` configuration for?
+
+`Reload` is about the same as `DebugInstall` except the dll is slightly modified according to [Umm's manual on how to reload at runtime](https://wiki.nexusmods.com/index.php/How_to_reload_mod_at_runtime_(UMM)) so the dll has a good chance to correctly reload at runtime, allowing you to make changes and apply them immediately without having to restart Derail Valley.
+
+
 
 ### Line Endings Setup
 
@@ -80,7 +143,16 @@ It's recommended to use Git's [autocrlf mode][autocrlf-url] on Windows. Activate
 
 ## Packaging
 
-To package a build for distribution, you can run the `package.ps1` PowerShell script in the root of the project. If no parameters are supplied, it will create a .zip file ready for distribution in the dist directory. A post build event is configured to run this automatically after each successful Release build.
+To package a build for distribution, just run `dotnet build -c Release` in the root of the project it will create a .zip file ready for distribution in the dist directory.
+
+It generates a `repository.json` file (see above about it) and then packages all built `.dll`, `LICENSE` and `info.json` files into a `.zip` archive ready for distribution. That file is stored inside the dist directory.
+
+Note: Don't forget to commit and push the generated `repository.json` file.
+
+
+### Alternate way
+
+If you prefer using an external script, you may package a build for distribution by running the `package.ps1` PowerShell script in the root of the project. If no parameters are supplied, it will create a .zip file ready for distribution in the dist directory. A post build event is configured to run this automatically after each successful Release build.
 
 Linux: `pwsh ./package.ps1`
 Windows: `powershell -executionpolicy bypass .\package.ps1`

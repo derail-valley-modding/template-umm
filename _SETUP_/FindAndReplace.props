@@ -1,0 +1,69 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <UsingTask TaskName="FindAndReplace" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)/Microsoft.Build.Tasks.Core.dll">
+        <ParameterGroup>
+			<At ParameterType="System.String" Required="true" />
+			<Files ParameterType="System.String" Required="true" />
+			<Find ParameterType="System.String" Required="true" />
+			<Replace ParameterType="System.String" Required="true" />
+        </ParameterGroup>
+        <Task>
+			<Using Namespace="System.IO" />
+            <Code Type="Fragment" Language="cs">
+                <![CDATA[
+                    foreach (var pattern in Files.Split(';')) {
+                        foreach (var filePath in Directory.GetFiles(At, pattern.Trim())) {
+                            var fileContent = File.ReadAllText(filePath).Replace(Find, Replace);
+                            File.WriteAllText(filePath, fileContent);
+                        }
+                    }
+                ]]>
+            </Code>
+        </Task>
+    </UsingTask>
+
+	<UsingTask TaskName="RenameFileOrDirectory" TaskFactory="RoslynCodeTaskFactory"
+		AssemblyFile="$(MSBuildToolsPath)/Microsoft.Build.Tasks.Core.dll">
+		<ParameterGroup>
+			<From ParameterType="System.String" Required="true" />
+			<To ParameterType="System.String" Required="true" />
+		</ParameterGroup>
+		<Task>
+			<Using Namespace="System.IO" />
+			<Code Type="Fragment" Language="cs">
+			<![CDATA[
+				Log.LogMessage($"Moving '{From}' -> '{To}' ");
+				if (File.Exists(From) || Directory.Exists(From)){
+					Directory.Move(From, To);
+				} else {
+					Log.LogError($"'{From}' does not exist.");
+				}
+			]]>
+		</Code>
+		</Task>
+	</UsingTask>
+
+	<Target Name="FindAndReplaceMOD_NAME" >
+		<FindAndReplace
+			At=".."
+			Files="_MOD_NAME_.sln;info.json;repository.json;_MOD_NAME_/Main.cs;_MOD_NAME_/Settings.cs"
+			Find="_MOD_NAME_"
+			Replace="$(ModName)"
+		/>
+	</Target>
+
+	<Target Name="FindAndReplaceMOD_AUTHOR">
+		<FindAndReplace
+			At=".."
+			Files="info.json"
+			Find="_MOD_AUTHOR_"
+			Replace="$(ModAuthor)"
+		/>
+	</Target>
+
+	<Target Name="Rename">
+		<RenameFileOrDirectory Condition="!Exists('../_MOD_NAME_/$(MOD_NAME).csproj')" From="../_MOD_NAME_/_MOD_NAME_.csproj" To="../_MOD_NAME_/$(MOD_NAME).csproj" />
+		<RenameFileOrDirectory Condition="!Exists('../$(MOD_NAME).sln')" From="../_MOD_NAME_.sln" To="../$(MOD_NAME).sln" />
+		<RenameFileOrDirectory Condition="!Exists('../$(MOD_NAME)')" From="../_MOD_NAME_" To="../$(MOD_NAME)" />
+	</Target>
+
+</Project>

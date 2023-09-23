@@ -3,20 +3,29 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MOD_NAME", "MOD_NAME/MOD_NAME.csproj", "{35FB73C9-194D-4B06-8327-9200CAF9BF7D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_MOD_NAME_", "_MOD_NAME_\_MOD_NAME_.csproj", "{35FB73C9-194D-4B06-8327-9200CAF9BF7D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Reload|Any CPU = Reload|Any CPU
 		Debug|Any CPU = Debug|Any CPU
+		DebugInstall|Any CPU = DebugInstall|Any CPU
 		Release|Any CPU = Release|Any CPU
+		ReleaseInstall|Any CPU = ReleaseInstall|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{35FB73C9-194D-4B06-8327-9200CAF9BF7D}.Reload|Any CPU.ActiveCfg = Reload|Any CPU
+		{35FB73C9-194D-4B06-8327-9200CAF9BF7D}.Reload|Any CPU.Build.0 = Reload|Any CPU
 		{35FB73C9-194D-4B06-8327-9200CAF9BF7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{35FB73C9-194D-4B06-8327-9200CAF9BF7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35FB73C9-194D-4B06-8327-9200CAF9BF7D}.DebugInstall|Any CPU.ActiveCfg = DebugInstall|Any CPU
+		{35FB73C9-194D-4B06-8327-9200CAF9BF7D}.DebugInstall|Any CPU.Build.0 = DebugInstall|Any CPU
 		{35FB73C9-194D-4B06-8327-9200CAF9BF7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35FB73C9-194D-4B06-8327-9200CAF9BF7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35FB73C9-194D-4B06-8327-9200CAF9BF7D}.ReleaseInstall|Any CPU.ActiveCfg = ReleaseInstall|Any CPU
+		{35FB73C9-194D-4B06-8327-9200CAF9BF7D}.ReleaseInstall|Any CPU.Build.0 = ReleaseInstall|Any CPU
 	EndGlobalSection
 EndGlobal

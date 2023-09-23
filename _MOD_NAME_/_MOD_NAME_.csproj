@@ -1,0 +1,150 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<Import
+		Condition="'$(Configuration)'=='Reload' AND Exists('../building/AssemblyVersionPatch.props')"
+		Project="../building/AssemblyVersionPatch.props" />
+	<Import Project="../building/ReadInfoJson.props" />
+	<Import Project="../building/Repository.json.props" />
+
+	<!-- Properties you may change if they don't work for you -->
+	<PropertyGroup>
+
+		<ReferencePath>$(DerailValleyPath)/DerailValley_Data/Managed</ReferencePath>
+		<ReferencePathUMM>$(ReferencePath)/UnityModManager</ReferencePathUMM>
+		<AssemblySearchPaths>$(AssemblySearchPaths);$(ReferencePath);$(ReferencePathUMM);</AssemblySearchPaths>
+
+		<ModsPath>$(DerailValleyPath)/Mods</ModsPath>
+		<AssemblyName>$(ModId)</AssemblyName> <!-- Read from info.json -->
+
+		<!-- AssemblyVersion like this so it's easy to build one for reloading -->
+		<PrefixAssemblyVersion>1.0.0.</PrefixAssemblyVersion>
+		<AssemblyVersion>$(PrefixAssemblyVersion)0</AssemblyVersion>
+
+		<TargetFramework>net48</TargetFramework>
+		<LangVersion>latest</LangVersion>
+		<Nullable>enable</Nullable>
+		<WarningsAsErrors>CS8600;CS8602;CS8603</WarningsAsErrors>
+	</PropertyGroup>
+
+	<!-- Need to delayed evaluation so ModId is defined which is info.json is read -->
+	<Target Name="SetInstallPath" BeforeTargets="BeforeBuild">
+		<PropertyGroup>
+			<ModInstallPath>$(ModsPath)/$(ModId)</ModInstallPath>
+		</PropertyGroup>
+	</Target>
+
+	<!-- What to do for each configuration run. This is the ConfName in `dotnet build -c ConfName` -->
+	<PropertyGroup Condition="'$(Configuration)'=='Reload' OR '$(Configuration)'=='DebugInstall' OR '$(Configuration)'=='ReleaseInstall'">
+		<doCopy>true</doCopy>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Debug' OR '$(Configuration)'=='Release' OR '$(Configuration)'=='ReleaseInstall'">
+		<doPackage>true</doPackage>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Release'">
+		<generateRepository>true</generateRepository>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Reload' OR '$(Configuration)'=='Debug' OR '$(Configuration)'=='DebugInstall'">
+		<DefineConstants>DEBUG</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Reload'">
+		<!-- Incrementing the AssemblyVersion per build is necessary for reload to work -->
+		<AssemblyVersionPatch Condition="'$(AssemblyVersionPatch)' == ''">0</AssemblyVersionPatch>
+		<AssemblyVersion>1.0.0.$(AssemblyVersionPatch)</AssemblyVersion>
+	</PropertyGroup>
+
+	<!-- Derail Valley -->
+	<ItemGroup>
+		<Reference Include="Assembly-CSharp" />
+	</ItemGroup>
+
+	<!-- Unity -->
+	<ItemGroup>
+		<Reference Include="UnityEngine" />
+		<Reference Include="UnityEngine.CoreModule" />
+		<Reference Include="UnityEngine.AudioModule" />
+	</ItemGroup>
+
+	<!-- Mod Loader -->
+	<ItemGroup>
+		<Reference Include="UnityModManager" Version="0.27.2" />
+		<Reference Include="0Harmony" Version="2.2.2" />
+	</ItemGroup>
+
+	<!-- Project dependencies -->
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+		<PackageReference Include="Nullable" Version="1.3.1" PrivateAssets="all" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" /> <!-- To read info.json -->
+	</ItemGroup>
+
+
+	<Target Name="UpdateAssemblyVersionPatch" BeforeTargets="PrepareForBuild" Condition="'$(Configuration)'=='Reload'">
+		<PropertyGroup>
+			<VersionNumberFile>../building/AssemblyVersionPatch.txt</VersionNumberFile>
+			<PropsFile>../building/AssemblyVersionPatch.props</PropsFile>
+		</PropertyGroup>
+		<ReadLinesFromFile File="$(VersionNumberFile)">
+			<Output TaskParameter="Lines" PropertyName="CurrentVersion" />
+		</ReadLinesFromFile>
+		<PropertyGroup>
+			<CurrentVersion Condition="'$(CurrentVersion)' == ''">1</CurrentVersion>
+			<NewVersion>$([MSBuild]::Add($(CurrentVersion), 1))</NewVersion>
+			<WAsseblyVersion>
+				<![CDATA[
+<Project>
+	<PropertyGroup>
+		<AssemblyVersionPatch>$(CurrentVersion)</AssemblyVersionPatch>
+	</PropertyGroup>
+</Project>
+				]]>
+			</WAsseblyVersion>
+		</PropertyGroup>
+		<WriteLinesToFile File="$(VersionNumberFile)" Lines="$(NewVersion)" Overwrite="true" />
+		<WriteLinesToFile File="$(PropsFile)" Lines="$(WAsseblyVersion)" Overwrite="true" />
+	</Target>
+
+	<Target Name="BeforeBuild">
+		<CallTarget Targets="ReadJsonFile" />
+	</Target>
+
+
+	<Target Name="CopyBuild">
+		<ItemGroup>
+			<SourceFiles Include="$(MSBuildProjectDirectory)/../build/**" />
+			<SourceFiles Include="$(MSBuildProjectDirectory)/../info.json" />
+		</ItemGroup>
+		<Copy SourceFiles="@(SourceFiles)" DestinationFolder="$(ModInstallPath)/%(RecursiveDir)" />
+
+		<Message Text="Copied source files: @(SourceFiles)" />
+	</Target>
+
+	<Target Name="CreateZipArchive">
+		<PropertyGroup>
+			<ZippingDir>$(MSBuildProjectDirectory)/../dist/temp</ZippingDir>
+			<ArchiveName>$(BuildArchiveName)</ArchiveName>
+		</PropertyGroup>
+		<ItemGroup>
+			<SourceFiles Include="../build/*" />
+			<SourceFiles Include="../info.json" />
+			<SourceFiles Include="../LICENSE" />
+		</ItemGroup>
+		<MakeDir Directories="$(ZippingDir)" />
+		<Copy SourceFiles="@(SourceFiles)"
+			DestinationFolder="$(ZippingDir)/%(RecursiveDir)"
+			SkipUnchangedFiles="true" />
+		<Delete Files="$(ZippingDir)/../$(ArchiveName).zip" />
+		<ZipDirectory SourceDirectory="$(ZippingDir)"
+			DestinationFile="$(ZippingDir)/../$(ArchiveName).zip"
+			/>
+	</Target>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Message Text="ModsPath: $(ModInstallPath)" Importance="High" />
+		<Message Text="AssName: $(AssemblyName)" Importance="High" />
+		<!-- Copy to build folder -->
+		<Copy SourceFiles="$(TargetPath)" DestinationFolder="../build/"/>
+
+		<CallTarget Condition="'$(doCopy)' == 'true'" Targets="CopyBuild" />
+		<CallTarget Condition="'$(doPackage)' == 'true'" Targets="CreateZipArchive" />
+		<CallTarget Condition="'$(generateRepository)' == 'true'" Targets="GenerateRepositoryJson" />
+	</Target>
+</Project>
